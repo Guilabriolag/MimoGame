@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#05070A">
+<meta name="description" content="MimoGames — Jogue e Ganhe! O jogo de fidelização para comércios locais.">
+<title>MimoGames · Jogue e Ganhe</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="game.css">
+</head>
+<body>
+
+<!-- ── GRID BG ── -->
+<div class="grid-bg"></div>
+
+<!-- ── SPLASH ── -->
+<div id="splash" class="splash">
+  <div class="splash-logo">
+    <svg viewBox="0 0 120 100" width="90" height="75" aria-hidden="true">
+      <path d="M60,85 L100,65 L60,45 L20,65 Z" fill="rgba(0,229,255,.05)" stroke="rgba(0,229,255,.1)" stroke-width="0.5"/>
+      <rect x="28" y="52" width="14" height="28" rx="1" fill="#0A0D14" stroke="#D4AF37" stroke-width="0.8"/>
+      <rect x="46" y="40" width="14" height="40" rx="1" fill="#111520" stroke="#D4AF37" stroke-width="0.9"/>
+      <rect x="64" y="44" width="14" height="36" rx="1" fill="#0A0D14" stroke="#D4AF37" stroke-width="0.8"/>
+      <rect x="82" y="56" width="12" height="24" rx="1" fill="#0A0D14" stroke="#D4AF37" stroke-width="0.7"/>
+      <!-- janelas -->
+      <rect x="30" y="56" width="4" height="4" fill="#00E5FF" opacity=".5"/>
+      <rect x="36" y="56" width="4" height="4" fill="#D4AF37" opacity=".6"/>
+      <rect x="30" y="64" width="4" height="4" fill="#00E5FF" opacity=".4"/>
+      <rect x="36" y="64" width="4" height="4" fill="#00E5FF" opacity=".4"/>
+      <rect x="48" y="44" width="4" height="5" fill="#D4AF37" opacity=".5"/>
+      <rect x="54" y="44" width="4" height="5" fill="#00E5FF" opacity=".4"/>
+      <rect x="48" y="54" width="4" height="5" fill="#00E5FF" opacity=".4"/>
+      <rect x="54" y="54" width="4" height="5" fill="#D4AF37" opacity=".5"/>
+      <rect x="48" y="64" width="4" height="5" fill="#00E5FF" opacity=".4"/>
+      <rect x="54" y="64" width="4" height="5" fill="#00E5FF" opacity=".4"/>
+      <rect x="66" y="48" width="4" height="5" fill="#00E5FF" opacity=".5"/>
+      <rect x="72" y="48" width="4" height="5" fill="#D4AF37" opacity=".5"/>
+      <rect x="66" y="58" width="4" height="5" fill="#D4AF37" opacity=".4"/>
+      <rect x="72" y="58" width="4" height="5" fill="#00E5FF" opacity=".4"/>
+      <!-- antena -->
+      <line x1="53" y1="40" x2="53" y2="32" stroke="#D4AF37" stroke-width="1" opacity=".7"/>
+      <circle cx="53" cy="31" r="2" fill="#D4AF37" opacity=".8"/>
+      <circle cx="53" cy="31" r="4" fill="none" stroke="#D4AF37" stroke-width="0.5" opacity=".3">
+        <animate attributeName="r" values="3;7;3" dur="2s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values=".3;0;.3" dur="2s" repeatCount="indefinite"/>
+      </circle>
+    </svg>
+  </div>
+  <div id="splashTitulo" class="splash-title">MimoGames</div>
+  <div id="splashSubtitulo" class="splash-sub">Powered by Labriolag</div>
+  <div class="splash-dots">
+    <div class="splash-dot"></div>
+    <div class="splash-dot"></div>
+    <div class="splash-dot"></div>
+  </div>
+</div>
+
+<!-- ── HEADER ── -->
+<header class="site-header">
+  <a href="index.html" class="header-logo">
+    LABRIOLAG
+    <span>MIMOGAMES · v2.0</span>
+  </a>
+  <nav class="header-nav">
+    <a href="index.html" class="active">🎮 <span>Jogar</span></a>
+    <a href="login.html">🔑 <span>Entrar</span></a>
+    <a href="setup.html" id="navSetup" style="display:none">⚙️ <span>Setup</span></a>
+  </nav>
+</header>
+<div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+
+<!-- ── MAIN ── -->
+<main class="page-wrap">
+  <div class="container">
+
+    <!-- Perfil do jogador -->
+    <div id="profileChip" style="display:none" class="profile-chip anim-fadeUp">
+      <div class="pc-avatar" id="pcAvatar">🎮</div>
+      <div>
+        <div class="pc-name" id="pcName">Jogador</div>
+        <div class="pc-role" id="pcRole">Jogador</div>
+      </div>
+      <div style="margin-left:auto">
+        <span class="badge badge-success"><span class="badge-dot"></span>Online</span>
+      </div>
+    </div>
+
+    <!-- Aviso se não logado -->
+    <div id="notLoggedNotice" class="notice notice-gold mb-16 anim-fadeUp">
+      <span class="notice-icon">⚡</span>
+      <span>Você está jogando como visitante. <a href="login.html" style="color:var(--gold)">Faça login</a> para salvar seus pontos e resgatar prêmios.</span>
+    </div>
+
+    <!-- Título -->
+    <div class="anim-fadeUp" style="margin-bottom:28px;">
+      <div class="eyebrow"><span class="ew-line"></span>Jogo da Memória</div>
+      <h1 id="gameTitle">Encontre todos<br>os <em>pares e ganhe!</em></h1>
+      <p class="text-off text-sm mt-8" id="gameDesc">
+        Vire as cartas, encontre os pares e desbloqueie seu prêmio!
+      </p>
+    </div>
+
+    <!-- Card do jogo -->
+    <div class="card anim-fadeUp" style="animation-delay:.1s">
+      <div class="card-head">
+        <span class="card-head-icon">🎯</span>
+        <span class="card-head-title">Partida em Curso</span>
+        <div style="margin-left:auto;display:flex;gap:6px">
+          <span class="badge badge-gold" id="diffBadge">Normal</span>
+        </div>
+      </div>
+      <div class="card-body">
+
+        <!-- Seletor de dificuldade -->
+        <div class="difficulty-btns">
+          <button class="diff-btn" data-diff="facil">⭐ Fácil</button>
+          <button class="diff-btn active" data-diff="normal">⭐⭐ Normal</button>
+          <button class="diff-btn diff-hard" data-diff="dificil">⭐⭐⭐ Difícil</button>
+        </div>
+
+        <!-- HUD -->
+        <div class="game-hud">
+          <div class="hud-stat">
+            <div class="hud-stat-value" id="hudPares">0/8</div>
+            <div class="hud-stat-label">Pares</div>
+          </div>
+          <div class="hud-stat" id="wrapTimer" style="display:none">
+            <div class="hud-stat-value hud-timer" id="hudTimer">02:00</div>
+            <div class="hud-stat-label">Tempo</div>
+          </div>
+          <div class="hud-stat">
+            <div class="hud-stat-value" id="hudMovs">0</div>
+            <div class="hud-stat-label">Movimentos</div>
+          </div>
+          <div class="hud-stat" id="wrapTentativas" style="display:none">
+            <div class="hud-stat-value" id="hudTentativas" style="color:var(--error)">—</div>
+            <div class="hud-stat-label">Tentativas</div>
+          </div>
+        </div>
+
+        <!-- Barra de progresso do jogo -->
+        <div class="game-progress">
+          <div class="game-progress-fill" id="gameProgress" style="width:0%"></div>
+        </div>
+
+        <!-- Tabuleiro -->
+        <div class="board" id="board">
+          <!-- cartas renderizadas via JS -->
+          <div style="grid-column:1/-1;padding:40px;text-align:center;color:var(--muted);font-size:.85rem">
+            Pressione <strong style="color:var(--gold)">▶ Iniciar Jogo</strong> para começar
+          </div>
+        </div>
+
+        <!-- Controles -->
+        <div class="game-controls">
+          <button class="btn btn-gold" id="btnStart">▶ Iniciar Jogo</button>
+          <a href="login.html" class="btn btn-outline btn-sm" id="btnLogin">🔑 Login / Prêmios</a>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Scoreboard -->
+    <div id="scoreboard" class="scoreboard" style="display:none;margin-top:20px;"></div>
+
+    <!-- Info do prêmio -->
+    <div class="card mt-16 anim-fadeUp" style="animation-delay:.2s" id="premioCard">
+      <div class="card-head">
+        <span class="card-head-icon">🎁</span>
+        <span class="card-head-title">Seu Prêmio</span>
+      </div>
+      <div class="card-body text-center">
+        <div style="font-size:2rem;margin-bottom:10px">🏆</div>
+        <p id="premioDesc" class="text-off text-sm">
+          Complete o jogo para desbloquear seu prêmio exclusivo desta loja!
+        </p>
+        <div class="notice notice-gold mt-12" style="text-align:left">
+          <span class="notice-icon">💡</span>
+          <span>Ao vencer você recebe um <strong>código único de resgate</strong>. Apresente ao estabelecimento para retirar seu prêmio.</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /container -->
+</main>
+
+<!-- ── FOOTER DA LOJA ── -->
+<footer class="site-footer">
+  <img class="footer-logo-img" id="footerLogo"
+    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%230A0D14'/%3E%3Ctext x='50%25' y='55%25' font-size='32' text-anchor='middle' dominant-baseline='middle'%3E🎮%3C/text%3E%3C/svg%3E"
+    alt="Logo da Loja">
+  <div class="footer-store-name" id="footerNome">MimoGames</div>
+  <div class="footer-slogan" id="footerSlogan">Jogue. Ganhe. Sorria.</div>
+  <div class="footer-contact" id="footerContato">📍 Seu estabelecimento • ☎️ Contato</div>
+  <a class="whatsapp-btn" id="footerWA" href="#" target="_blank" style="display:none">
+    📲 Fale no WhatsApp
+  </a>
+  <div class="divider" style="margin:16px 0"></div>
+  <div class="text-xs text-muted">Powered by <span style="color:var(--gold)">Labriolag</span> · MimoGames v2.0</div>
+</footer>
+
+<!-- ── MODAL VITÓRIA ── -->
+<div class="modal-overlay reward-modal" id="modalVitoria">
+  <div class="modal-box">
+    <div class="modal-head">
+      <span class="reward-icon">🏆</span>
+      <h3>Você <em>Ganhou!</em></h3>
+    </div>
+    <div class="modal-body">
+      <div class="flex gap-12 mb-16" style="text-align:center;justify-content:center">
+        <div>
+          <div style="font-size:1.2rem;font-weight:700;color:var(--gold)" id="rewardTempo">—</div>
+          <div class="text-xs text-muted">Tempo</div>
+        </div>
+        <div style="width:1px;background:var(--line)"></div>
+        <div>
+          <div style="font-size:1.2rem;font-weight:700;color:var(--cyber)" id="rewardMovs">—</div>
+          <div class="text-xs text-muted">Movimentos</div>
+        </div>
+      </div>
+
+      <div class="notice notice-gold mb-12">
+        <span class="notice-icon">🎁</span>
+        <span id="rewardPremio">Prêmio especial da casa!</span>
+      </div>
+
+      <div style="font-size:.72rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Seu código de resgate</div>
+      <div class="reward-code">
+        <span id="rewardCode">MG—XXXX</span>
+        <button class="reward-code-copy" onclick="copiarCodigo()" title="Copiar">📋</button>
+      </div>
+      <div class="reward-validity" id="rewardValidade">Válido por 24 horas</div>
+
+      <div class="notice notice-cyber">
+        <span class="notice-icon">📲</span>
+        <span>Apresente este código no balcão ou envie pelo WhatsApp para retirar seu prêmio.</span>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="fecharVitoria()">Fechar</button>
+      <button class="btn btn-gold" onclick="fecharVitoria();iniciarJogo()">▶ Jogar de Novo</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL DERROTA ── -->
+<div class="modal-overlay" id="modalDerrota">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div style="font-size:2rem;text-align:center;margin-bottom:8px">😤</div>
+      <h3>Quase lá!</h3>
+    </div>
+    <div class="modal-body">
+      <p class="text-off text-sm">Não desanime! Você estava tão perto. Tente novamente e conquiste seu prêmio.</p>
+      <div class="notice notice-warn mt-12">
+        <span class="notice-icon">⏱️</span>
+        <span>Dica: comece pelo <strong>modo Fácil</strong> para memorizar os pares e depois aumente a dificuldade.</span>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="fecharDerrota()">Fechar</button>
+      <button class="btn btn-gold" onclick="fecharDerrota();iniciarJogo()">↺ Tentar Novamente</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script src="game.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  MG.load();
+
+  // Atualizar nav setup
+  const tipo = MG.jogador.tipo;
+  if (tipo === 'Comerciante' || tipo === 'DEVGUI' || tipo === 'comerciante_free') {
+    document.getElementById('navSetup').style.display = 'flex';
+  }
+
+  // Perfil visual
+  const chip = document.getElementById('profileChip');
+  const notice = document.getElementById('notLoggedNotice');
+  if (tipo !== 'anonimo') {
+    chip.style.display = 'flex';
+    document.getElementById('pcName').textContent = MG.jogador.nickname || 'Jogador';
+    document.getElementById('pcRole').textContent = tipo;
+    if (tipo === 'Jogador') document.getElementById('pcAvatar').textContent = '🎮';
+    else if (tipo === 'Comerciante') document.getElementById('pcAvatar').textContent = '🏪';
+    else document.getElementById('pcAvatar').textContent = '🔑';
+    notice.style.display = 'none';
+    document.getElementById('btnLogin').style.display = 'none';
+  }
+
+  // Prêmio
+  const premio = MG.loja.recompensa?.texto;
+  if (premio) document.getElementById('premioDesc').textContent = `🏆 ${premio}`;
+
+  // Dificuldade badge
+  document.querySelectorAll('.diff-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.getElementById('diffBadge').textContent =
+        btn.textContent.trim();
+    });
+  });
+
+  // Splash
+  MG.showSplash();
+});
+</script>
+</body>
+</html>

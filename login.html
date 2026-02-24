@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#05070A">
+<title>MimoGames · Entrar</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="grid-bg"></div>
+
+<!-- HEADER -->
+<header class="site-header">
+  <a href="index.html" class="header-logo">
+    LABRIOLAG
+    <span>MIMOGAMES · v2.0</span>
+  </a>
+  <nav class="header-nav">
+    <a href="index.html">🎮 <span>Jogar</span></a>
+    <a href="login.html" class="active">🔑 <span>Entrar</span></a>
+  </nav>
+</header>
+<div class="progress-bar"><div class="progress-fill" style="width:33%"></div></div>
+
+<!-- MAIN -->
+<main class="page-wrap">
+  <div class="container" style="max-width:480px">
+
+    <!-- Logo / hero -->
+    <div class="text-center mb-24 anim-fadeUp">
+      <div style="font-size:3rem;margin-bottom:12px;animation:floatLogo 4s ease-in-out infinite">🎮</div>
+      <div class="eyebrow" style="justify-content:center"><span class="ew-line"></span>Identificação<span class="ew-line"></span></div>
+      <h1 style="font-size:1.9rem">Bem-vindo ao<br><em>MimoGames</em></h1>
+      <p class="text-off text-sm mt-8">Jogue, ganhe prêmios e fidelize clientes.</p>
+    </div>
+
+    <!-- CARD LOGIN JOGADOR -->
+    <div class="card anim-fadeUp" style="animation-delay:.05s;margin-bottom:16px" id="cardJogador">
+      <div class="card-head">
+        <span class="card-head-icon">🎮</span>
+        <span class="card-head-title">Sou Jogador</span>
+        <span class="badge badge-gold" style="margin-left:auto">Grátis</span>
+      </div>
+      <div class="card-body">
+        <p class="text-off text-sm mb-16">Digite seu nome para jogar e concorrer a prêmios exclusivos.</p>
+        <div class="form-group">
+          <label for="nomeJogador">Seu Nome</label>
+          <input type="text" id="nomeJogador" placeholder="Como quer ser chamado?" autocomplete="name">
+        </div>
+        <button class="btn btn-gold btn-full" onclick="loginJogador()">▶ Começar a Jogar</button>
+        <div class="notice notice-gold mt-12">
+          <span class="notice-icon">🏆</span>
+          <span>Ao vencer você recebe um <strong>código de resgate</strong> para retirar seu prêmio!</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIVIDER -->
+    <div class="divider-text">ou acesse como</div>
+
+    <!-- CARD ADMIN -->
+    <div class="card anim-fadeUp" style="animation-delay:.1s" id="cardAdmin">
+      <div class="card-head">
+        <span class="card-head-icon">🔑</span>
+        <span class="card-head-title">Acesso Administrativo</span>
+      </div>
+      <div class="card-body">
+        <div class="form-group">
+          <label for="nomeAdmin">Nome (opcional)</label>
+          <input type="text" id="nomeAdmin" placeholder="Nome do responsável">
+        </div>
+        <div class="form-group">
+          <label for="senhaAdmin">Senha de Acesso</label>
+          <div style="position:relative">
+            <input type="password" id="senhaAdmin" placeholder="Senha do comerciante ou dev">
+            <button onclick="toggleSenha()" style="
+              position:absolute;right:12px;top:50%;transform:translateY(-50%);
+              background:none;border:none;color:var(--muted);cursor:pointer;
+              font-size:.9rem;padding:4px;
+            " id="eyeBtn">👁️</button>
+          </div>
+          <div style="margin-top:6px">
+            <details>
+              <summary class="text-xs text-muted" style="cursor:pointer;list-style:none">
+                💡 Senhas de acesso
+              </summary>
+              <div class="notice notice-warn" style="margin-top:8px">
+                <span class="notice-icon">⚠️</span>
+                <div class="text-xs">
+                  <strong>loja</strong> → Comerciante completo<br>
+                  <strong>free</strong> → Comerciante versão gratuita<br>
+                  <strong>dev</strong> → Painel DEVGUI
+                </div>
+              </div>
+            </details>
+          </div>
+        </div>
+        <button class="btn btn-outline btn-full" onclick="loginAdmin()">🔓 Acessar Painel</button>
+      </div>
+    </div>
+
+    <!-- Se já logado -->
+    <div id="logadoCard" class="card mt-16 anim-fadeUp" style="display:none;animation-delay:.15s">
+      <div class="card-body">
+        <div id="logadoChip" class="profile-chip" style="margin-bottom:12px">
+          <div class="pc-avatar" id="lcAvatar">🎮</div>
+          <div>
+            <div class="pc-name" id="lcName">—</div>
+            <div class="pc-role" id="lcRole">—</div>
+          </div>
+          <span class="badge badge-success" style="margin-left:auto"><span class="badge-dot"></span>Ativo</span>
+        </div>
+        <div class="flex gap-8">
+          <a href="index.html" class="btn btn-gold" style="flex:1">🎮 Ir Jogar</a>
+          <a href="setup.html" class="btn btn-outline" style="flex:1" id="btnSetupLink">⚙️ Setup</a>
+          <button class="btn btn-ghost btn-sm" onclick="logout()">Sair</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Validar código de resgate -->
+    <div class="card mt-16 anim-fadeUp" style="animation-delay:.2s" id="cardResgatar">
+      <div class="card-head">
+        <span class="card-head-icon">🎁</span>
+        <span class="card-head-title">Validar Código de Prêmio</span>
+        <span class="badge badge-cyber" style="margin-left:auto">Comerciante</span>
+      </div>
+      <div class="card-body">
+        <p class="text-off text-sm mb-12">Valide o código que o cliente mostrou para liberar o prêmio.</p>
+        <div class="form-group">
+          <label for="codigoInput">Código do Cliente</label>
+          <input type="text" id="codigoInput" placeholder="Ex: LOJA-4X7K"
+            style="text-transform:uppercase;letter-spacing:2px;font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;color:var(--gold)">
+        </div>
+        <button class="btn btn-cyber btn-full" onclick="validarCodigoUI()">✓ Validar Código</button>
+        <div id="resultadoCodigo" class="mt-12" style="display:none"></div>
+      </div>
+    </div>
+
+    <!-- Créditos -->
+    <div class="text-center mt-24 text-xs text-muted anim-fadeUp" style="animation-delay:.25s">
+      Powered by <span style="color:var(--gold)">Labriolag</span> · MimoGames v2.0<br>
+      <a href="setup.html" style="color:var(--muted);text-decoration:none;margin-top:4px;display:inline-block">
+        ⚙️ Setup do Comerciante
+      </a>
+    </div>
+
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-logo">LABRIOLAG</div>
+  <div class="footer-slogan" id="footerSlogan">MimoGames — Fidelização que diverte.</div>
+  <div class="footer-contact" id="footerContato"></div>
+  <a class="whatsapp-btn" id="footerWA" href="#" target="_blank" style="display:none">
+    📲 Fale no WhatsApp
+  </a>
+</footer>
+
+<script src="app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  MG.load();
+  atualizarUI();
+
+  // Enter nos campos
+  document.getElementById('nomeJogador').addEventListener('keydown', e => {
+    if (e.key === 'Enter') loginJogador();
+  });
+  document.getElementById('senhaAdmin').addEventListener('keydown', e => {
+    if (e.key === 'Enter') loginAdmin();
+  });
+  document.getElementById('codigoInput').addEventListener('input', e => {
+    e.target.value = e.target.value.toUpperCase();
+  });
+});
+
+function atualizarUI() {
+  const logado = MG.jogador.tipo !== 'anonimo';
+  document.getElementById('logadoCard').style.display = logado ? 'block' : 'none';
+  if (logado) {
+    document.getElementById('lcName').textContent = MG.jogador.nickname;
+    document.getElementById('lcRole').textContent = MG.jogador.tipo;
+    const avatars = { Jogador:'🎮', Comerciante:'🏪', DEVGUI:'🔑', comerciante_free:'🏪' };
+    document.getElementById('lcAvatar').textContent = avatars[MG.jogador.tipo] || '🎮';
+
+    const tipo = MG.jogador.tipo;
+    const btnSetup = document.getElementById('btnSetupLink');
+    if (tipo === 'Jogador') btnSetup.style.display = 'none';
+
+    // Mostrar seção resgate apenas pra comerciante/dev
+    const cardR = document.getElementById('cardResgatar');
+    if (tipo !== 'Comerciante' && tipo !== 'DEVGUI') cardR.style.display = 'none';
+  }
+}
+
+function loginJogador() {
+  const nome = document.getElementById('nomeJogador').value.trim();
+  if (!nome) { MG.toast('Digite seu nome para jogar!', 'error'); return; }
+  MG.jogador = { tipo: 'Jogador', nickname: nome };
+  MG.save();
+  MG.toast(`Bem-vindo, ${nome}! 🎮`, 'gold');
+  setTimeout(() => window.location.href = 'index.html', 800);
+}
+
+function loginAdmin() {
+  const nome  = document.getElementById('nomeAdmin').value.trim();
+  const senha = document.getElementById('senhaAdmin').value.trim();
+  const result = MG.validarLogin(nome, senha);
+  if (!result) { MG.toast('Senha incorreta.', 'error'); return; }
+  MG.jogador = { tipo: result.tipo, nickname: result.nickname };
+  MG.save();
+  MG.toast(`Logado como ${result.tipo} ✓`, 'gold');
+  setTimeout(() => window.location.href = 'setup.html', 700);
+}
+
+function logout() {
+  MG.jogador = { tipo: 'anonimo', nickname: '' };
+  MG.save();
+  MG.toast('Sessão encerrada.', 'cyber');
+  setTimeout(() => atualizarUI(), 400);
+}
+
+function toggleSenha() {
+  const inp = document.getElementById('senhaAdmin');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+}
+
+function validarCodigoUI() {
+  const code = document.getElementById('codigoInput').value.trim();
+  if (!code) { MG.toast('Digite o código!', 'error'); return; }
+  const r = MG.validarCodigo(code);
+  const el = document.getElementById('resultadoCodigo');
+  el.style.display = 'block';
+  if (r.ok) {
+    el.innerHTML = `
+      <div class="notice notice-cyber">
+        <span class="notice-icon">✅</span>
+        <div>
+          <strong>${r.msg}</strong><br>
+          <span class="text-xs text-muted">Jogador: ${r.r?.jogador || '—'}</span>
+        </div>
+      </div>`;
+    MG.toast('Código válido! Liberar prêmio ✓', 'success');
+  } else {
+    el.innerHTML = `
+      <div class="notice notice-error">
+        <span class="notice-icon">❌</span>
+        <span>${r.msg}</span>
+      </div>`;
+    MG.toast(r.msg, 'error');
+  }
+}
+</script>
+</body>
+</html>

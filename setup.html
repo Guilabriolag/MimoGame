@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#05070A">
+<title>MimoGames · Configurações</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="grid-bg"></div>
+
+<!-- HEADER -->
+<header class="site-header">
+  <a href="index.html" class="header-logo">
+    LABRIOLAG
+    <span>MIMOGAMES · v2.0</span>
+  </a>
+  <nav class="header-nav">
+    <a href="index.html">🎮 <span>Jogar</span></a>
+    <a href="login.html">🔑 <span>Login</span></a>
+    <a href="setup.html" class="active">⚙️ <span>Setup</span></a>
+  </nav>
+</header>
+<div class="progress-bar">
+  <div class="progress-fill" style="width:66%"></div>
+</div>
+
+<!-- ACESSO NEGADO (default hidden) -->
+<div id="acessoNegado" class="page-wrap" style="display:none">
+  <div class="container" style="max-width:480px;text-align:center">
+    <div style="font-size:3rem;margin-bottom:16px">🔒</div>
+    <h2>Acesso Restrito</h2>
+    <p class="text-off text-sm mt-8 mb-24">Esta área é exclusiva para comerciantes e administradores.</p>
+    <a href="login.html" class="btn btn-gold">🔑 Fazer Login</a>
+  </div>
+</div>
+
+<!-- CONTEÚDO PRINCIPAL -->
+<main class="page-wrap" id="mainContent" style="display:none">
+  <div class="container">
+
+    <!-- Header da página -->
+    <div class="flex items-center justify-between mb-24 anim-fadeUp">
+      <div>
+        <div class="eyebrow"><span class="ew-line"></span>Painel do Comerciante</div>
+        <h1 style="font-size:1.8rem">Configurações<br><em>do Seu Negócio</em></h1>
+      </div>
+      <div class="hide-mobile">
+        <div id="panelChip" class="profile-chip" style="margin-bottom:0">
+          <div class="pc-avatar" id="panelAvatar">🏪</div>
+          <div>
+            <div class="pc-name" id="panelName">Comerciante</div>
+            <div class="pc-role" id="panelRole">Painel Admin</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="flex gap-8 mb-20 anim-fadeUp" style="animation-delay:.05s;flex-wrap:wrap" id="tabNav">
+      <button class="btn btn-gold btn-sm" data-tab="loja" onclick="abrirTab('loja')">🏪 Loja</button>
+      <button class="btn btn-ghost btn-sm" data-tab="jogo" onclick="abrirTab('jogo')">🎮 Jogo</button>
+      <button class="btn btn-ghost btn-sm" data-tab="resgates" onclick="abrirTab('resgates')">🎁 Resgates</button>
+      <button class="btn btn-ghost btn-sm" data-tab="dev" onclick="abrirTab('dev')" id="tabDev" style="display:none">🧪 DEVGUI</button>
+    </div>
+
+    <!-- ── TAB: LOJA ── -->
+    <div id="tabLoja" class="tab-content">
+
+      <!-- NOTICE FREE -->
+      <div id="freeNotice" class="notice notice-warn mb-16 anim-fadeUp" style="display:none">
+        <span class="notice-icon">⚠️</span>
+        <div>
+          <strong>Versão Gratuita</strong> — WhatsApp e download completo estão bloqueados.<br>
+          <span class="text-xs">Atualize para a versão completa para desbloquear todos os recursos.</span>
+        </div>
+      </div>
+
+      <div class="card anim-fadeUp" style="animation-delay:.1s">
+        <div class="card-head">
+          <span class="card-head-icon">🏪</span>
+          <span class="card-head-title">Identidade do Negócio</span>
+        </div>
+        <div class="card-body">
+
+          <!-- Preview da loja -->
+          <div id="lojaPreview" style="
+            display:flex;align-items:center;gap:14px;
+            background:var(--ink2);border:1px solid var(--line);
+            border-radius:var(--radius);padding:14px;margin-bottom:20px;
+          ">
+            <img id="prevLogo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' fill='%230A0D14'/%3E%3Ctext x='50%25' y='55%25' font-size='28' text-anchor='middle' dominant-baseline='middle'%3E🏪%3C/text%3E%3C/svg%3E"
+              alt="Logo" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid var(--gold-b)">
+            <div>
+              <div id="prevNome" style="font-weight:700;color:var(--white);font-size:.95rem">Seu Negócio</div>
+              <div id="prevSlogan" class="text-xs text-muted">Slogan aqui...</div>
+            </div>
+            <span class="badge badge-gold" id="prevTipo" style="margin-left:auto">Tipo</span>
+          </div>
+
+          <div class="grid-2">
+            <div class="form-group">
+              <label for="nomeLoja">Nome do Negócio *</label>
+              <input type="text" id="nomeLoja" placeholder="Ex: Pizzaria do João" oninput="atualizarPreview()">
+            </div>
+            <div class="form-group">
+              <label for="tipoLoja">Tipo do Negócio *</label>
+              <select id="tipoLoja" onchange="atualizarPreview()">
+                <option value="labriolag">⚡ Labriolag (Demo)</option>
+                <option value="pizzaria">🍕 Pizzaria</option>
+                <option value="padaria">🍞 Padaria</option>
+                <option value="hamburgueria">🍔 Hamburgueria</option>
+                <option value="doceira">🍬 Doceira</option>
+                <option value="acaitaria">🍧 Açaitaria</option>
+                <option value="sorveteria">🍨 Sorveteria</option>
+                <option value="japones">🍣 Japonês</option>
+                <option value="cafeteria">☕ Cafeteria</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="logoLoja">URL da Logo</label>
+            <input type="url" id="logoLoja" placeholder="https://..." oninput="atualizarPreview()">
+          </div>
+
+          <div class="form-group">
+            <label for="sloganLoja">Slogan</label>
+            <input type="text" id="sloganLoja" placeholder="Ex: A melhor pizza da cidade!" oninput="atualizarPreview()">
+          </div>
+
+          <div class="form-group">
+            <label for="premioTexto">Texto do Prêmio</label>
+            <input type="text" id="premioTexto" placeholder="Ex: Uma pizza grátis para você!">
+          </div>
+
+          <div class="form-group">
+            <label for="whatsappLoja">WhatsApp com DDD <span id="waLock" class="badge badge-warn" style="font-size:.55rem">🔒 Bloqueado (Free)</span></label>
+            <input type="tel" id="whatsappLoja" placeholder="Ex: 11987654321">
+          </div>
+
+          <div class="flex gap-8 mt-16" style="flex-wrap:wrap">
+            <button class="btn btn-gold" onclick="salvarLoja()" style="flex:1;min-width:140px">💾 Salvar</button>
+            <button class="btn btn-outline" onclick="previewJogo()" style="flex:1;min-width:140px">👁 Ver Jogo</button>
+          </div>
+
+        </div>
+      </div>
+
+    </div><!-- /tabLoja -->
+
+    <!-- ── TAB: JOGO ── -->
+    <div id="tabJogo" class="tab-content" style="display:none">
+      <div class="card anim-fadeUp">
+        <div class="card-head">
+          <span class="card-head-icon">🎮</span>
+          <span class="card-head-title">Configurações do Jogo</span>
+        </div>
+        <div class="card-body">
+
+          <div class="notice notice-cyber mb-16">
+            <span class="notice-icon">⚡</span>
+            <span>O tema visual do jogo (emojis, cores) é definido automaticamente pelo <strong>Tipo do Negócio</strong> configurado na aba Loja.</span>
+          </div>
+
+          <div class="form-group">
+            <label>Dificuldade Padrão</label>
+            <div style="display:flex;gap:8px;margin-top:4px">
+              <button class="diff-btn active" data-diff="facil" onclick="selDiff('facil')">⭐ Fácil</button>
+              <button class="diff-btn" data-diff="normal" onclick="selDiff('normal')">⭐⭐ Normal</button>
+              <button class="diff-btn diff-hard" data-diff="dificil" onclick="selDiff('dificil')">⭐⭐⭐ Difícil</button>
+            </div>
+          </div>
+
+          <!-- Info de cada nível -->
+          <div class="grid-3 mt-16">
+            <div class="card">
+              <div class="card-body text-center">
+                <div style="font-size:1.4rem;margin-bottom:6px">⭐</div>
+                <div style="font-weight:700;color:var(--gold);margin-bottom:4px">Fácil</div>
+                <div class="text-xs text-muted">6 pares · Sem timer · Tentativas ilimitadas</div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-body text-center">
+                <div style="font-size:1.4rem;margin-bottom:6px">⭐⭐</div>
+                <div style="font-weight:700;color:var(--gold);margin-bottom:4px">Normal</div>
+                <div class="text-xs text-muted">8 pares · 2 min · Tentativas ilimitadas</div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-body text-center">
+                <div style="font-size:1.4rem;margin-bottom:6px">⭐⭐⭐</div>
+                <div style="font-weight:700;color:var(--cyber);margin-bottom:4px">Difícil</div>
+                <div class="text-xs text-muted">10 pares · 90s · 20 tentativas</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- Simulador -->
+          <h3 class="mb-16">🧪 Ferramentas de Teste</h3>
+          <div class="flex gap-8" style="flex-wrap:wrap">
+            <a href="index.html" class="btn btn-outline">▶ Abrir Jogo</a>
+            <button class="btn btn-ghost" onclick="resetarScores()">🗑 Resetar Scores</button>
+            <button class="btn btn-ghost" onclick="resetarResgates()">🗑 Resetar Resgates</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB: RESGATES ── -->
+    <div id="tabResgates" class="tab-content" style="display:none">
+      <div class="card anim-fadeUp">
+        <div class="card-head">
+          <span class="card-head-icon">🎁</span>
+          <span class="card-head-title">Códigos de Resgate Gerados</span>
+        </div>
+        <div class="card-body">
+
+          <!-- Validação rápida -->
+          <div class="form-group">
+            <label for="codigoValidar">Validar Código do Cliente</label>
+            <div class="flex gap-8">
+              <input type="text" id="codigoValidar" placeholder="Ex: LOJANAME-4X7K"
+                style="flex:1;text-transform:uppercase;letter-spacing:2px;
+                       font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;color:var(--gold)">
+              <button class="btn btn-cyber" onclick="validarSetup()" style="flex-shrink:0">✓ Validar</button>
+            </div>
+          </div>
+          <div id="resultadoSetup" class="mt-8" style="display:none"></div>
+
+          <div class="divider"></div>
+
+          <!-- Lista de resgates -->
+          <div id="listaResgates">
+            <div class="text-center text-muted text-sm" style="padding:24px 0">
+              Nenhum resgate gerado ainda.
+            </div>
+          </div>
+
+          <button class="btn btn-ghost btn-sm mt-12" onclick="carregarResgates()">↺ Atualizar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB: DEVGUI ── -->
+    <div id="tabDev" class="tab-content" style="display:none">
+      <div class="notice notice-warn mb-16 anim-fadeUp">
+        <span class="notice-icon">🧪</span>
+        <span><strong>DEVGUI</strong> — Área exclusiva de desenvolvimento. Alterações afetam todos os usuários desta instalação.</span>
+      </div>
+
+      <div class="card anim-fadeUp" style="animation-delay:.05s">
+        <div class="card-head">
+          <span class="card-head-icon">🎨</span>
+          <span class="card-head-title">Splash Screen</span>
+        </div>
+        <div class="card-body">
+          <div class="form-group">
+            <label for="devSplashLogo">URL da Logo (Splash)</label>
+            <input type="url" id="devSplashLogo" placeholder="https://...">
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label for="devSplashTitulo">Título</label>
+              <input type="text" id="devSplashTitulo" placeholder="MimoGames">
+            </div>
+            <div class="form-group">
+              <label for="devSplashSubtitulo">Subtítulo</label>
+              <input type="text" id="devSplashSubtitulo" placeholder="Powered by Labriolag">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mt-16 anim-fadeUp" style="animation-delay:.1s">
+        <div class="card-head">
+          <span class="card-head-icon">📍</span>
+          <span class="card-head-title">Rodapé Global</span>
+        </div>
+        <div class="card-body">
+          <div class="form-group">
+            <label for="devContato">Informações de Contato</label>
+            <input type="text" id="devContato" placeholder="📍 Cidade · ☎️ (00) 00000-0000">
+          </div>
+        </div>
+      </div>
+
+      <div class="flex gap-8 mt-16" style="flex-wrap:wrap">
+        <button class="btn btn-gold" onclick="salvarDev()" style="flex:1">💾 Salvar Dev Config</button>
+        <button class="btn btn-danger" onclick="resetarTudo()">🗑 Resetar Tudo</button>
+      </div>
+    </div>
+
+  </div><!-- /container -->
+</main>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-store-name" id="footerNome">MimoGames</div>
+  <div class="footer-slogan" id="footerSlogan">Configurações do Comerciante</div>
+  <div class="footer-contact" id="footerContato"></div>
+  <a class="whatsapp-btn" id="footerWA" href="#" target="_blank" style="display:none">
+    📲 Fale no WhatsApp
+  </a>
+  <div class="divider" style="margin:12px 0"></div>
+  <div class="text-xs text-muted">Powered by <span style="color:var(--gold)">Labriolag</span> · MimoGames v2.0</div>
+</footer>
+
+<style>
+.diff-btn {
+  padding:8px 14px;border-radius:6px;border:1px solid var(--line);
+  background:var(--ink3);color:var(--off);font-size:.72rem;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;cursor:pointer;
+  transition:all .2s;font-family:'DM Sans',sans-serif;
+}
+.diff-btn:hover { border-color:var(--gold-b);color:var(--gold); }
+.diff-btn.active { border-color:var(--gold);color:var(--gold);background:var(--gold-p); }
+.diff-btn.diff-hard.active { border-color:var(--cyber);color:var(--cyber);background:var(--cyber-d); }
+
+.resgate-row {
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;background:var(--ink3);border:1px solid var(--line);
+  border-radius:var(--radius);margin-bottom:6px;
+}
+.rr-code { font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;
+           color:var(--gold);letter-spacing:2px;flex:1; }
+.rr-status { font-size:.6rem;padding:3px 7px;border-radius:10px; }
+.rr-valid   { background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:var(--success); }
+.rr-used    { background:rgba(100,100,100,.1);border:1px solid rgba(100,100,100,.2);color:var(--muted); }
+.rr-expired { background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:var(--error); }
+</style>
+
+<script src="app.js"></script>
+<script>
+let diffSelecionado = 'facil';
+
+document.addEventListener('DOMContentLoaded', () => {
+  MG.load();
+
+  const tipo = MG.jogador.tipo;
+  const permitidos = ['Comerciante','DEVGUI','comerciante_free'];
+  if (!permitidos.includes(tipo)) {
+    document.getElementById('acessoNegado').style.display = 'block';
+    return;
+  }
+  document.getElementById('mainContent').style.display = 'block';
+
+  // Perfil
+  document.getElementById('panelName').textContent = MG.jogador.nickname;
+  document.getElementById('panelRole').textContent = tipo;
+  const av = { Comerciante:'🏪', DEVGUI:'🔑', comerciante_free:'🏪' };
+  document.getElementById('panelAvatar').textContent = av[tipo] || '🏪';
+
+  // Dev tab
+  if (tipo === 'DEVGUI') {
+    document.getElementById('tabDev').style.display = 'flex';
+  }
+
+  // Free notice
+  if (tipo === 'comerciante_free') {
+    document.getElementById('freeNotice').style.display = 'flex';
+    document.getElementById('waLock').style.display = 'inline-flex';
+    document.getElementById('whatsappLoja').disabled = true;
+  } else {
+    document.getElementById('waLock').style.display = 'none';
+  }
+
+  preencherFormularios();
+  carregarResgates();
+});
+
+function abrirTab(nome) {
+  document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+  document.getElementById(`tab${nome.charAt(0).toUpperCase()+nome.slice(1)}`).style.display = 'block';
+
+  document.querySelectorAll('#tabNav button').forEach(btn => {
+    const isActive = btn.dataset.tab === nome;
+    btn.className = isActive ? 'btn btn-gold btn-sm' : 'btn btn-ghost btn-sm';
+  });
+}
+
+function preencherFormularios() {
+  const L = MG.loja, D = MG.dev;
+  setValue('nomeLoja',       L.nome     || '');
+  setValue('logoLoja',       L.logo     || '');
+  setValue('sloganLoja',     L.slogan   || '');
+  setValue('whatsappLoja',   L.whatsapp || '');
+  setValue('premioTexto',    L.recompensa?.texto || '');
+  setValue('tipoLoja',       L.tipo     || 'labriolag');
+  setValue('devSplashLogo',  D.splashLogo     || '');
+  setValue('devSplashTitulo',D.splashTitulo   || '');
+  setValue('devSplashSubtitulo', D.splashSubtitulo || '');
+  setValue('devContato',     D.contato  || '');
+  atualizarPreview();
+}
+
+function setValue(id, v) {
+  const el = document.getElementById(id);
+  if (el) el.value = v;
+}
+
+function atualizarPreview() {
+  const nome   = document.getElementById('nomeLoja').value;
+  const slogan = document.getElementById('sloganLoja').value;
+  const logo   = document.getElementById('logoLoja').value;
+  const tipo   = document.getElementById('tipoLoja').value;
+  const tema   = MG.temas[tipo] || MG.temas.labriolag;
+  const labels = {labriolag:'⚡ Tech',pizzaria:'🍕 Pizzaria',padaria:'🍞 Padaria',hamburgueria:'🍔 Burguer',
+                  doceira:'🍬 Doceira',acaitaria:'🍧 Açaí',sorveteria:'🍨 Sorveteria',japones:'🍣 Japonês',cafeteria:'☕ Café'};
+
+  document.getElementById('prevNome').textContent = nome || 'Seu Negócio';
+  document.getElementById('prevSlogan').textContent = slogan || tema.slogan;
+  document.getElementById('prevTipo').textContent = labels[tipo] || tipo;
+  if (logo) document.getElementById('prevLogo').src = logo;
+}
+
+function salvarLoja() {
+  const tipo = MG.jogador.tipo;
+  MG.loja = {
+    nome:      document.getElementById('nomeLoja').value,
+    logo:      document.getElementById('logoLoja').value,
+    slogan:    document.getElementById('sloganLoja').value,
+    whatsapp:  tipo === 'comerciante_free' ? '' : document.getElementById('whatsappLoja').value,
+    tipo:      document.getElementById('tipoLoja').value,
+    recompensa:{ texto: document.getElementById('premioTexto').value },
+  };
+  MG.save();
+  MG.aplicarVisual();
+  MG.toast('Configurações salvas! ✓', 'gold');
+}
+
+function salvarDev() {
+  MG.dev = {
+    splashLogo:     document.getElementById('devSplashLogo').value,
+    splashTitulo:   document.getElementById('devSplashTitulo').value,
+    splashSubtitulo:document.getElementById('devSplashSubtitulo').value,
+    contato:        document.getElementById('devContato').value,
+  };
+  MG.save();
+  MG.aplicarVisual();
+  MG.toast('Dev config salva! ✓', 'cyber');
+}
+
+function previewJogo() {
+  salvarLoja();
+  window.open('index.html', '_blank');
+}
+
+function selDiff(d) {
+  diffSelecionado = d;
+  document.querySelectorAll('.diff-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.diff === d);
+    btn.classList.toggle('diff-hard', btn.dataset.diff === 'dificil');
+  });
+  MG.toast(`Dificuldade: ${d}`, 'cyber');
+}
+
+function carregarResgates() {
+  const resgates = JSON.parse(localStorage.getItem(MG.keys.resgates) || '[]');
+  const el = document.getElementById('listaResgates');
+  if (resgates.length === 0) {
+    el.innerHTML = '<div class="text-center text-muted text-sm" style="padding:20px 0">Nenhum resgate gerado ainda.</div>';
+    return;
+  }
+  el.innerHTML = resgates.slice().reverse().map(r => {
+    const now = Date.now();
+    let statusClass = 'rr-valid', statusLabel = 'Válido';
+    if (r.used) { statusClass = 'rr-used'; statusLabel = 'Usado'; }
+    else if (now > r.exp) { statusClass = 'rr-expired'; statusLabel = 'Expirado'; }
+    const dt = new Date(r.exp).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+    return `
+      <div class="resgate-row">
+        <div class="rr-code">${r.code}</div>
+        <div class="text-xs text-muted hide-mobile">${r.jogador || '—'} · até ${dt}</div>
+        <span class="rr-status ${statusClass}">${statusLabel}</span>
+      </div>
+    `;
+  }).join('');
+}
+
+function validarSetup() {
+  const code = document.getElementById('codigoValidar').value.trim();
+  if (!code) return;
+  const r = MG.validarCodigo(code);
+  const el = document.getElementById('resultadoSetup');
+  el.style.display = 'block';
+  if (r.ok) {
+    el.innerHTML = `<div class="notice notice-cyber"><span class="notice-icon">✅</span><span>${r.msg} — Jogador: ${r.r?.jogador||'—'}</span></div>`;
+    MG.toast('Prêmio liberado! ✓', 'success');
+    carregarResgates();
+  } else {
+    el.innerHTML = `<div class="notice notice-error"><span class="notice-icon">❌</span><span>${r.msg}</span></div>`;
+    MG.toast(r.msg, 'error');
+  }
+}
+
+function resetarScores() {
+  if (!confirm('Resetar ranking de pontuações?')) return;
+  localStorage.removeItem(MG.keys.scores);
+  MG.toast('Scores resetados.', 'cyber');
+}
+
+function resetarResgates() {
+  if (!confirm('Resetar todos os códigos de resgate?')) return;
+  localStorage.removeItem(MG.keys.resgates);
+  carregarResgates();
+  MG.toast('Resgates resetados.', 'cyber');
+}
+
+function resetarTudo() {
+  if (!confirm('⚠️ Isso apagará TODOS os dados. Continuar?')) return;
+  MG.reset();
+}
+</script>
+</body>
+</html>
