@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<title>LABRIOLAG — MIDNIGHT DELIVERY</title>
+<style>
+:root {
+  --gold: #D4AF37;
+  --cyber: #00E5FF;
+  --ink: #05070A;
+  --road: #0A0D12;
+}
+
+body {
+  margin: 0; background: var(--ink); color: white;
+  font-family: 'Courier New', monospace; overflow: hidden;
+  display: flex; justify-content: center; align-items: center; height: 100vh;
+}
+
+#game-stage {
+  position: relative; width: min(400px, 95vw); height: 80vh;
+  background: var(--road); border: 2px solid var(--gold);
+  overflow: hidden; border-radius: 8px;
+}
+
+/* Faixas da Estrada */
+.road-line {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  width: 6px; height: 40px; background: var(--gold); opacity: 0.3;
+  animation: moveRoad 0.6s linear infinite;
+}
+
+@keyframes moveRoad {
+  from { top: -100px; }
+  to { top: 100%; }
+}
+
+/* Player (Moto) */
+#player {
+  position: absolute; bottom: 40px; left: 50%;
+  width: 34px; height: 60px; transform: translateX(-50%);
+  transition: left 0.15s ease-out; z-index: 10;
+}
+
+/* Obstáculos */
+.obs {
+  position: absolute; width: 40px; height: 70px;
+  background: #FF3B5C; border-radius: 4px;
+  box-shadow: 0 0 15px rgba(255,59,92,0.4);
+}
+
+/* UI */
+.hud {
+  position: absolute; top: 10px; left: 10px; right: 10px;
+  display: flex; justify-content: space-between; z-index: 100;
+  pointer-events: none;
+}
+.stat { background: rgba(0,0,0,0.7); padding: 5px 10px; border: 1px solid var(--gold); font-size: 12px; }
+#pizza-health { color: var(--cyber); }
+
+#overlay {
+  position: absolute; inset: 0; background: rgba(0,0,0,0.85);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  z-index: 200; text-align: center;
+}
+button {
+  padding: 15px 30px; background: var(--gold); border: none;
+  font-weight: bold; cursor: pointer; margin-top: 20px;
+}
+</style>
+</head>
+<body>
+
+<div id="game-stage">
+  <div class="hud">
+    <div class="stat">PIZZA: <span id="pizza-health">100%</span></div>
+    <div class="stat">DISTÂNCIA: <span id="distance">0m</span></div>
+  </div>
+
+  <div id="road-lines-container"></div>
+  
+  <div id="player">
+    <svg viewBox="0 0 40 70">
+      <rect x="10" y="10" width="20" height="50" rx="5" fill="#111" stroke="var(--cyber)" stroke-width="2"/>
+      <rect x="5" y="45" width="30" height="15" rx="2" fill="var(--gold)"/> <circle cx="20" cy="15" r="5" fill="var(--cyber)"/> </svg>
+  </div>
+
+  <div id="overlay">
+    <h1 style="color:var(--gold)">MIDNIGHT DELIVERY</h1>
+    <p>Use as setas ou toque nas laterais<br>para desviar dos carros!</p>
+    <button onclick="startGame()">INICIAR ENTREGA</button>
+  </div>
+</div>
+
+<script>
+const stage = document.getElementById('game-stage');
+const player = document.getElementById('player');
+const healthDisplay = document.getElementById('pizza-health');
+const distDisplay = document.getElementById('distance');
+const overlay = document.getElementById('overlay');
+
+let gameActive = false;
+let health = 100;
+let distance = 0;
+let playerX = 50; // Porcentagem
+let obstacles = [];
+
+// Gerar faixas da estrada
+const linesContainer = document.getElementById('road-lines-container');
+for(let i=0; i<5; i++) {
+    let line = document.createElement('div');
+    line.className = 'road-line';
+    line.style.animationDelay = (i * 0.15) + 's';
+    linesContainer.appendChild(line);
+}
+
+function startGame() {
+    health = 100;
+    distance = 0;
+    playerX = 50;
+    obstacles.forEach(o => o.el.remove());
+    obstacles = [];
+    gameActive = true;
+    overlay.style.display = 'none';
+    requestAnimationFrame(update);
+}
+
+// Controle
+window.addEventListener('keydown', e => {
+    if(e.key === 'ArrowLeft') playerX = Math.max(15, playerX - 10);
+    if(e.key === 'ArrowRight') playerX = Math.min(85, playerX + 10);
+    player.style.left = playerX + '%';
+});
+
+// Touch para Mobile
+stage.addEventListener('touchstart', e => {
+    const touchX = e.touches[0].clientX;
+    if(touchX < window.innerWidth/2) playerX = Math.max(15, playerX - 15);
+    else playerX = Math.min(85, playerX + 15);
+    player.style.left = playerX + '%';
+});
+
+function createObstacle() {
+    if(Math.random() < 0.03) {
+        const el = document.createElement('div');
+        el.className = 'obs';
+        el.style.left = (Math.random() * 70 + 15) + '%';
+        el.style.top = '-100px';
+        stage.appendChild(el);
+        obstacles.push({ el, top: -100 });
+    }
+}
+
+function update() {
+    if(!gameActive) return;
+
+    distance += 1;
+    distDisplay.textContent = distance + 'm';
+
+    createObstacle();
+
+    obstacles.forEach((obs, index) => {
+        obs.top += 7;
+        obs.el.style.top = obs.top + 'px';
+
+        // Colisão
+        const pRect = player.getBoundingClientRect();
+        const oRect = obs.el.getBoundingClientRect();
+
+        if (pRect.left < oRect.left + oRect.width &&
+            pRect.left + pRect.width > oRect.left &&
+            pRect.top < oRect.top + oRect.height &&
+            pRect.height + pRect.top > oRect.top) {
+            
+            health -= 10;
+            healthDisplay.textContent = health + '%';
+            obs.el.remove();
+            obstacles.splice(index, 1);
+            
+            if(health <= 0) gameOver();
+        }
+
+        if(obs.top > 800) {
+            obs.el.remove();
+            obstacles.splice(index, 1);
+        }
+    });
+
+    requestAnimationFrame(update);
+}
+
+function gameOver() {
+    gameActive = false;
+    overlay.style.display = 'flex';
+    overlay.innerHTML = `<h1 style="color:var(--gold)">PIZZA DESTRUÍDA!</h1>
+                        <p>Distância percorrida: ${distance}m</p>
+                        <button onclick="startGame()">TENTAR NOVAMENTE</button>`;
+}
+</script>
+</body>
+</html>
