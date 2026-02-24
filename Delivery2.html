@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<title>LABRIOLAG — MIDNIGHT DELIVERY</title>
+<style>
+/* Reutilizando as variáveis da sua Fortune Scratch */
+:root {
+  --gold: #D4AF37;
+  --gold-lt: #F0D060;
+  --cyber: #00E5FF;
+  --ink: #05070A;
+  --ink2: #0A0D12;
+  --font-d: 'Cormorant Garamond', serif;
+  --font-m: 'Courier New', monospace;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&display=swap');
+
+body, html { 
+    margin: 0; padding: 0; width: 100%; height: 100%; 
+    background: var(--ink); overflow: hidden; font-family: var(--font-d);
+}
+
+/* Efeito de Grão Noir */
+body::before {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 998;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+  opacity: 0.4; mix-blend-mode: overlay;
+}
+
+#game-container {
+    position: relative; width: 100%; height: 100vh;
+    display: flex; justify-content: center; align-items: center;
+}
+
+/* Palco do Jogo */
+#stage {
+    position: relative; width: 380px; height: 90vh;
+    background: var(--ink2); border: 1px solid var(--gold-dim);
+    box-shadow: 0 0 50px rgba(0,0,0,0.8); overflow: hidden;
+}
+
+/* Orbes de fundo */
+.orb {
+    position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.1;
+}
+
+/* Estrada */
+.road-line {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    width: 2px; height: 60px; background: linear-gradient(to bottom, var(--gold), transparent);
+}
+
+/* Prédios SVG (Obstáculos) */
+.building {
+    position: absolute; width: 60px; transition: filter 0.3s;
+}
+
+/* Moto Player */
+#player {
+    position: absolute; bottom: 80px; left: 50%;
+    width: 40px; height: 70px; transform: translateX(-50%);
+    z-index: 100; transition: left 0.2s cubic-bezier(0.17, 0.84, 0.44, 1);
+}
+
+.light-trail {
+    position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%);
+    width: 4px; height: 40px; background: var(--cyber);
+    filter: blur(4px); opacity: 0.6; border-radius: 10px;
+}
+
+/* HUD Superior */
+.hud {
+    position: absolute; top: 20px; left: 0; right: 0; padding: 0 20px;
+    display: flex; justify-content: space-between; z-index: 1000;
+}
+.stat-box {
+    background: rgba(0,0,0,0.6); border: 1px solid var(--gold);
+    padding: 5px 15px; color: var(--gold); font-size: 12px; letter-spacing: 2px;
+}
+
+/* Overlay */
+#overlay {
+    position: absolute; inset: 0; background: rgba(5,7,10,0.95);
+    z-index: 2000; display: flex; flex-direction: column; 
+    align-items: center; justify-content: center; text-align: center;
+}
+
+h1 { font-size: 48px; color: var(--gold); margin: 0; letter-spacing: 5px; }
+p { color: var(--cyber); letter-spacing: 2px; font-size: 14px; }
+
+.btn-start {
+    margin-top: 30px; padding: 15px 40px;
+    background: var(--gold); border: none; font-family: var(--font-d);
+    font-weight: bold; font-size: 18px; cursor: pointer;
+    box-shadow: 0 0 20px rgba(212,175,55,0.4);
+}
+</style>
+</head>
+<body>
+
+<div id="game-container">
+    <div id="stage">
+        <div class="orb" style="width:200px; height:200px; background:var(--gold); top:-50px; left:-50px;"></div>
+        <div class="orb" style="width:150px; height:150px; background:var(--cyber); bottom:10%; right:-20px;"></div>
+
+        <div class="hud">
+            <div class="stat-box">PIZZA: <span id="health">100</span>%</div>
+            <div class="stat-box">M: <span id="dist">0</span></div>
+        </div>
+
+        <div id="road-lines"></div>
+        <div id="entities"></div>
+
+        <div id="player">
+            <div class="light-trail"></div>
+            <svg viewBox="0 0 40 80">
+                <rect x="12" y="10" width="16" height="50" rx="4" fill="#111" stroke="var(--cyber)" stroke-width="1.5"/>
+                <rect x="10" y="45" width="20" height="20" rx="2" fill="var(--gold)" opacity="0.9"/> <rect x="18" y="5" width="4" height="15" fill="var(--cyber)" filter="blur(2px)"/> </svg>
+        </div>
+
+        <div id="overlay">
+            <h1 id="m-title">MIDNIGHT<br>DELIVERY</h1>
+            <p>LABRIOLAG GASTRONOMY</p>
+            <button class="btn-start" onclick="initGame()">INICIAR ROTA</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const stage = document.getElementById('stage');
+const player = document.getElementById('player');
+const entities = document.getElementById('entities');
+const healthLabel = document.getElementById('health');
+const distLabel = document.getElementById('dist');
+const overlay = document.getElementById('overlay');
+
+let state = {
+    active: false,
+    health: 100,
+    distance: 0,
+    lane: 1, // 0, 1, 2
+    lanesX: [25, 50, 75],
+    speed: 6,
+    lastObs: 0
+};
+
+// Gerar Estrada Estilizada
+const roadLayer = document.getElementById('road-lines');
+for(let i=0; i<8; i++) {
+    let line = document.createElement('div');
+    line.className = 'road-line';
+    line.style.top = (i * 120) + 'px';
+    roadLayer.appendChild(line);
+}
+
+function initGame() {
+    state.active = true;
+    state.health = 100;
+    state.distance = 0;
+    state.lane = 1;
+    entities.innerHTML = '';
+    overlay.style.display = 'none';
+    update();
+}
+
+// Input
+window.addEventListener('keydown', e => {
+    if(e.key === 'ArrowLeft' && state.lane > 0) state.lane--;
+    if(e.key === 'ArrowRight' && state.lane < 2) state.lane++;
+    player.style.left = state.lanesX[state.lane] + '%';
+});
+
+// Toque lateral
+stage.addEventListener('touchstart', e => {
+    const x = e.touches[0].clientX - stage.offsetLeft;
+    if(x < 190 && state.lane > 0) state.lane--;
+    else if(x >= 190 && state.lane < 2) state.lane++;
+    player.style.left = state.lanesX[state.lane] + '%';
+});
+
+function spawnBuilding() {
+    const now = Date.now();
+    if(now - state.lastObs > 800) {
+        const lane = Math.floor(Math.random() * 3);
+        const b = document.createElement('div');
+        b.className = 'building';
+        b.style.left = (state.lanesX[lane] - 10) + '%';
+        b.style.top = '-100px';
+        
+        // Estilo Prédio Labriolag SVG
+        b.innerHTML = `
+            <svg viewBox="0 0 50 100">
+                <rect x="5" y="0" width="40" height="100" fill="#0A0D12" stroke="var(--gold)" stroke-width="1" opacity="0.6"/>
+                <rect x="15" y="10" width="5" height="5" fill="var(--gold)" opacity="0.3"/>
+                <rect x="30" y="10" width="5" height="5" fill="var(--gold)" opacity="0.3"/>
+                <rect x="15" y="30" width="5" height="5" fill="var(--gold)" opacity="0.3"/>
+            </svg>
+        `;
+        
+        entities.appendChild(b);
+        state.lastObs = now;
+    }
+}
+
+function update() {
+    if(!state.active) return;
+
+    state.distance += 1;
+    distLabel.innerText = state.distance;
+
+    // Movimentar Estrada
+    document.querySelectorAll('.road-line').forEach(line => {
+        let top = parseFloat(line.style.top) + state.speed;
+        if(top > window.innerHeight) top = -60;
+        line.style.top = top + 'px';
+    });
+
+    // Gerenciar Obstáculos
+    spawnBuilding();
+    document.querySelectorAll('.building').forEach(b => {
+        let top = parseFloat(b.style.top) + state.speed;
+        b.style.top = top + 'px';
+
+        // Colisão AABB simples
+        const pR = player.getBoundingClientRect();
+        const bR = b.getBoundingClientRect();
+
+        if (pR.left < bR.right && pR.right > bR.left && pR.top < bR.bottom && pR.bottom > bR.top) {
+            state.health -= 20;
+            healthLabel.innerText = state.health;
+            b.remove();
+            if(state.health <= 0) gameOver();
+        }
+
+        if(top > 1000) b.remove();
+    });
+
+    requestAnimationFrame(update);
+}
+
+function gameOver() {
+    state.active = false;
+    overlay.style.display = 'flex';
+    document.getElementById('m-title').innerHTML = "ENTREGA<br>PERDIDA";
+    document.getElementById('m-title').style.color = "var(--err)";
+}
+</script>
+</body>
+</html>
